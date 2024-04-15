@@ -14,15 +14,22 @@ services:
     #############
     xis-cv-keycloak:
         container_name: xis-cv-keycloak
-        image: quay.io/keycloak/keycloak:23.0.7
+        image: jboss/keycloak:latest
         environment:
-            - KEYCLOAK_ADMIN=admin
-            - KEYCLOAK_ADMIN_PASSWORD=aiaiaia
-        command: start-dev
+            - KEYCLOAK_USER=admin
+            - KEYCLOAK_PASSWORD=admin
+            - PROXY_ADDRESS_FORWARDING=true
+            - DB_VENDOR=mysql
+            - DB_ADDR=db
+            - DB_PORT=3306
+            - DB_DATABASE=keycloak
+            - DB_USER=keycloak
+            - DB_PASSWORD=example
         depends_on:
             - xis-cv-keycloak-postgres
         ports:
-            - 9000:8080
+            - 8181:8080
+            - 9990:9990
         networks:
             - spring-cloud-network
         deploy:
@@ -35,15 +42,18 @@ services:
     ######################
     # KEYCLOACK POSTGRES #
     ######################
-    xis-cv-keycloak-postgres:
+    xis-cv-keycloak-mysql:
         container_name: xis-cv-keycloak-postgres
-        image: postgres:15
+        image: mysql:5
         volumes:
-            - postgres_data:/var/lib/postgresql/data
+            - ../data-keycloak:/var/lib/mysql
         environment:
-            POSTGRES_DB: keycloak
-            POSTGRES_USER: keycloak
-            POSTGRES_PASSWORD: password
+            MYSQL_ROOT_PASSWORD: example
+            MYSQL_DATABASE: keycloak
+            MYSQL_USER: keycloak
+            MYSQL_PASSWORD: example
+        ports:
+            - 3309:3306
         networks:
             - spring-cloud-network
         deploy:
