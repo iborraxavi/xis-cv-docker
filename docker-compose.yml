@@ -16,3 +16,14 @@ services:
             - 8888:8888
         networks:
             - spring-cloud-network
+
+    ####################################
+    # SPRING BOOT EUREKA SERVER #
+    ####################################
+    xis-cv-eureka-server:
+        container_name: xis-cv-eureka-server
+        image: xaviiborra/xis-cv-eureka-server:1.0.0
+        ports:
+            - 8761:8761
+        networks:
+            - spring-cloud-network
