@@ -21,10 +21,11 @@ services:
             KEYCLOAK_DB_USERNAME: keycloak
             KEYCLOAK_DB_PASSWORD: password
 
-            KEYCLOAK_HOSTNAME: localhost
-            KEYCLOAK_HOSTNAME_PORT: 8080
-            KEYCLOAK_HOSTNAME_STRICT: false
-            KEYCLOAK_HOSTNAME_STRICT_HTTPS: false
+            KC_HOSTNAME: localhost
+            KC_HOSTNAME_PORT: 8080
+            KC_HOSTNAME_STRICT: false
+            KC_HOSTNAME_STRICT_HTTPS: false
+            KC_HTTP_ENABLED: true
 
             KEYCLOAK_LOG_LEVEL: info
             KEYCLOAK_METRICS_ENABLED: true
