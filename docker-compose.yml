@@ -36,6 +36,14 @@ services:
             - xis-cv-keycloak-postgres
         ports:
             - 9000:8080
+        networks:
+            - spring-cloud-network
+        deploy:
+            restart_policy:
+                condition: on-failure
+                delay: 5s
+                max_attempts: 3
+                window: 120s
 
     ######################
     # KEYCLOACK POSTGRES #
@@ -44,11 +52,19 @@ services:
         container_name: xis-cv-keycloak-postgres
         image: postgres:15
         volumes:
-        - postgres_data:/var/lib/postgresql/data
+            - postgres_data:/var/lib/postgresql/data
         environment:
             POSTGRES_DB: keycloak
             POSTGRES_USER: keycloak
             POSTGRES_PASSWORD: password
+        networks:
+            - spring-cloud-network
+        deploy:
+            restart_policy:
+                condition: on-failure
+                delay: 5s
+                max_attempts: 3
+                window: 120s
 
 
     ####################################
