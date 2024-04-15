@@ -14,22 +14,28 @@ services:
     #############
     xis-cv-keycloak:
         container_name: xis-cv-keycloak
-        image: jboss/keycloak:latest
+        image: quay.io/keycloak/keycloak:23.0.7
         environment:
-            - KEYCLOAK_USER=admin
-            - KEYCLOAK_PASSWORD=admin
-            - PROXY_ADDRESS_FORWARDING=true
-            - DB_VENDOR=mysql
-            - DB_ADDR=db
-            - DB_PORT=3306
-            - DB_DATABASE=keycloak
-            - DB_USER=keycloak
-            - DB_PASSWORD=example
+            KEYCLOAK_DB: postgres
+            KEYCLOAK_DB_URL: jdbc:postgresql://keycloakdb:5432/keycloak
+            KEYCLOAK_DB_USERNAME: keycloak
+            KEYCLOAK_DB_PASSWORD: password
+
+            KC_HOSTNAME: localhost
+            KC_HOSTNAME_PORT: 8080
+            KC_HOSTNAME_STRICT: false
+            KC_HOSTNAME_STRICT_HTTPS: false
+
+            KEYCLOAK_LOG_LEVEL: info
+            KEYCLOAK_METRICS_ENABLED: true
+            KEYCLOAK_HEALTH_ENABLED: true
+            KEYCLOAK_ADMIN: admin
+            KEYCLOAK_ADMIN_PASSWORD: admin
+        command: start-dev
         depends_on:
-            - xis-cv-keycloak-mysql
+            - xis-cv-keycloak-postgres
         ports:
-            - 8181:8080
-            - 9990:9990
+            - 9000:8080
         networks:
             - spring-cloud-network
         deploy:
@@ -42,18 +48,15 @@ services:
     ######################
     # KEYCLOACK POSTGRES #
     ######################
-    xis-cv-keycloak-mysql:
+    xis-cv-keycloak-postgres:
         container_name: xis-cv-keycloak-postgres
-        image: mysql:5
+        image: postgres:15
         volumes:
-            - ../data-keycloak:/var/lib/mysql
+            - postgres_data:/var/lib/postgresql/data
         environment:
-            MYSQL_ROOT_PASSWORD: example
-            MYSQL_DATABASE: keycloak
-            MYSQL_USER: keycloak
-            MYSQL_PASSWORD: example
-        ports:
-            - 3309:3306
+            POSTGRES_DB: keycloak
+            POSTGRES_USER: keycloak
+            POSTGRES_PASSWORD: password
         networks:
             - spring-cloud-network
         deploy:
