@@ -41,3 +41,23 @@ services:
                 delay: 5s
                 max_attempts: 3
                 window: 120s
+
+    ####################################
+    # SPRING BOOT API GATEWAY #
+    ####################################
+    xis-cv-gateway:
+        container_name: xis-cv-gateway
+        image: xaviiborra/xis-cv-gateway:1.0.0
+        ports:
+            - 8080:8080
+        networks:
+            - spring-cloud-network
+        depends_on:
+            - xis-cv-configuration-server
+            - xis-cv-eureka-server
+        deploy:
+            restart_policy:
+                condition: on-failure
+                delay: 5s
+                max_attempts: 3
+                window: 120s
