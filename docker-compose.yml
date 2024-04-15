@@ -1,4 +1,4 @@
-version: '2'
+version: '3.8'
 
 networks:
     spring-cloud-network:
@@ -16,6 +16,12 @@ services:
             - 8888:8888
         networks:
             - spring-cloud-network
+        deploy:
+            restart_policy:
+                condition: on-failure
+                delay: 5s
+                max_attempts: 3
+                window: 120s
 
     ####################################
     # SPRING BOOT EUREKA SERVER #
@@ -27,3 +33,11 @@ services:
             - 8761:8761
         networks:
             - spring-cloud-network
+        depends_on:
+            - xis-cv-configuration-server
+        deploy:
+            restart_policy:
+                condition: on-failure
+                delay: 5s
+                max_attempts: 3
+                window: 120s
