@@ -16,22 +16,19 @@ services:
         container_name: xis-cv-keycloak
         image: quay.io/keycloak/keycloak:23.0.7
         environment:
-            KEYCLOAK_DB: postgres
-            KEYCLOAK_DB_URL: jdbc:postgresql://keycloakdb:5432/keycloak
-            KEYCLOAK_DB_USERNAME: keycloak
-            KEYCLOAK_DB_PASSWORD: password
-
-            KC_HOSTNAME: localhost
-            KC_HOSTNAME_PORT: 8080
-            KC_HOSTNAME_STRICT: false
-            KC_HOSTNAME_STRICT_HTTPS: false
-            KC_HTTP_ENABLED: true
-
-            KEYCLOAK_LOG_LEVEL: info
-            KEYCLOAK_METRICS_ENABLED: true
-            KEYCLOAK_HEALTH_ENABLED: true
-            KEYCLOAK_ADMIN: admin
-            KEYCLOAK_ADMIN_PASSWORD: admin
+            - KEYCLOAK_ADMIN=admin
+            - KEYCLOAK_ADMIN_PASSWORD=aiaiaia
+            - KC_HOSTNAME_ADMIN=localhost
+            - KC_PROXY=edge
+            - KC_HOSTNAME=some-machine.somewhere
+            - KC_METRICS_ENABLED=true
+            - KC_HEALTH_ENABLED=true
+            - KC_DB=postgres
+            - KC_DB_PASSWORD=password
+            - KC_DB_SCHEMA=public
+            - KC_DB_USERNAME=keycloak
+            - KC_DB_URL_HOST=postgres
+            - KC_DB_URL_DATABASE=keycloak
         command: start-dev
         depends_on:
             - xis-cv-keycloak-postgres
