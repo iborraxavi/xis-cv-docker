@@ -33,7 +33,7 @@ services:
             KEYCLOAK_ADMIN_PASSWORD: admin
         command: start-dev
         depends_on:
-            - xis-cv-postgres
+            - xis-cv-keycloak-postgres
         ports:
             - 9000:8080
 
