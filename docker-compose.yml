@@ -9,66 +9,6 @@ volumes:
 
 services:
 
-    #############
-    # KEYCLOACK #
-    #############
-    xis-cv-keycloak:
-        container_name: xis-cv-keycloak
-        image: quay.io/keycloak/keycloak:23.0.7
-        environment:
-            KEYCLOAK_DB: postgres
-            KEYCLOAK_DB_URL: jdbc:postgresql://keycloakdb:5432/keycloak
-            KEYCLOAK_DB_USERNAME: keycloak
-            KEYCLOAK_DB_PASSWORD: password
-
-            KC_HOSTNAME: localhost
-            KC_HOSTNAME_PORT: 8080
-            KC_HOSTNAME_STRICT: false
-            KC_HOSTNAME_STRICT_HTTPS: false
-
-            KEYCLOAK_LOG_LEVEL: info
-            KEYCLOAK_METRICS_ENABLED: true
-            KEYCLOAK_HEALTH_ENABLED: true
-            KEYCLOAK_ADMIN: admin
-            KEYCLOAK_ADMIN_PASSWORD: admin
-        command: start-dev
-        depends_on:
-            - xis-cv-keycloak-postgres
-        ports:
-            - 9000:8080
-        networks:
-            - spring-cloud-network
-        deploy:
-            restart_policy:
-                condition: on-failure
-                delay: 5s
-                max_attempts: 3
-                window: 120s
-
-    ######################
-    # KEYCLOACK POSTGRES #
-    ######################
-    xis-cv-keycloak-postgres:
-        container_name: xis-cv-keycloak-postgres
-        image: postgres:15
-        volumes:
-            - postgres_data:/var/lib/postgresql/data
-        environment:
-            POSTGRES_DB: keycloak
-            POSTGRES_USER: keycloak
-            POSTGRES_PASSWORD: password
-        ports:
-            - 5432:5432
-        networks:
-            - spring-cloud-network
-        deploy:
-            restart_policy:
-                condition: on-failure
-                delay: 5s
-                max_attempts: 3
-                window: 120s
-
-
     ####################################
     # SPRING BOOT CONFIGURATION SERVER #
     ####################################
