@@ -41,9 +41,9 @@ services:
         volumes:
             - postgres_data:/var/lib/postgresql/data
         environment:
-            POSTGRES_DB: ${KEYCLOAK_DB_NAME}
-            POSTGRES_USER: ${KEYCLOAK_DB_USER}
-            POSTGRES_PASSWORD: ${KEYCLOAK_DB_PASSWORD}
+            POSTGRES_DB: keycloakdb
+            POSTGRES_USER: keycloakdbuser
+            POSTGRES_PASSWORD: EqhvLbsPhrkkZjcaGWcV7qT
         ports:
             - "5432:5432"
         networks:
