@@ -80,7 +80,7 @@ services:
         networks:
             - spring-cloud-network
         depends_on:
-            - postgres
+            - xis-keycloak-postgres
         deploy:
             restart_policy:
                 condition: on-failure
