@@ -35,15 +35,15 @@ services:
     ############
     # POSTGRES #
     ############
-    postgres:
+    xis-keycloak-postgres:
         container_name: xis-keycloak-postgres
-        image: postgres:16.2
+        image: postgres:16
         volumes:
             - postgres_data:/var/lib/postgresql/data
         environment:
-            POSTGRES_DB: ${POSTGRES_DB}
-            POSTGRES_USER: ${POSTGRES_USER}
-            POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+            POSTGRES_DB: ${KEYCLOAK_DB_NAME}
+            POSTGRES_USER: ${KEYCLOAK_DB_USER}
+            POSTGRES_PASSWORD: ${KEYCLOAK_DB_PASSWORD}
         networks:
             - spring-cloud-network
         deploy:
@@ -56,29 +56,31 @@ services:
     ############
     # KEYCLOAK #
     ############
-    keycloak:
+    xis-keycloak:
         container_name: xis-keycloak
-        image: quay.io/keycloak/keycloak:23.0.6
-        command: start
+        image: bitnami/keycloak:22.0.1
         environment:
-            KC_HOSTNAME: localhost
-            KC_HOSTNAME_PORT: 8080
-            KC_HOSTNAME_STRICT_BACKCHANNEL: false
-            KC_HTTP_ENABLED: true
-            KC_HOSTNAME_STRICT_HTTPS: false
-            KC_HEALTH_ENABLED: true
-            KEYCLOAK_ADMIN: ${KEYCLOAK_ADMIN}
+            KEYCLOAK_DATABASE_VENDOR: postgresql
+            KEYCLOAK_DATABASE_HOST: postgres
+            KEYCLOAK_DATABASE_PORT: 5432
+            KEYCLOAK_DATABASE_NAME: ${KEYCLOAK_DB_NAME}
+            KEYCLOAK_DATABASE_USER: ${KEYCLOAK_DB_USER}
+            KEYCLOAK_DATABASE_PASSWORD: ${KEYCLOAK_DB_PASSWORD}
+            KEYCLOAK_DATABASE_SCHEMA: public
+            KEYCLOAK_ADMIN_USER: ${KEYCLOAK_ADMIN_USERNAME}
             KEYCLOAK_ADMIN_PASSWORD: ${KEYCLOAK_ADMIN_PASSWORD}
-            KC_DB: postgres
-            KC_DB_URL: jdbc:postgresql://postgres/${POSTGRES_DB}
-            KC_DB_USERNAME: ${POSTGRES_USER}
-            KC_DB_PASSWORD: ${POSTGRES_PASSWORD}
+            KEYCLOAK_ENABLE_HEALTH_ENDPOINTS: 'true'
+            KEYCLOAK_ENABLE_STATISTICS: 'true'
+            KC_HOSTNAME: localhost:28080
+            KC_HOSTNAME_STRICT: 'false'
+            KC_HOSTNAME_STRICT_HTTPS: 'false'
+            KC_HTTP_ENABLED: 'true'
         ports:
-            - 9090:8080
-        depends_on:
-            - postgres
+            - "28080:8080"
         networks:
             - spring-cloud-network
+        depends_on:
+            - postgres
         deploy:
             restart_policy:
                 condition: on-failure
