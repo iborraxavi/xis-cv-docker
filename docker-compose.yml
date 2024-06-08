@@ -37,7 +37,7 @@ services:
     ############
     xis-keycloak-postgres:
         container_name: xis-keycloak-postgres
-        image: postgres:16
+        image: postgres:14
         volumes:
             - postgres_data:/var/lib/postgresql/data
         environment:
