@@ -73,7 +73,7 @@ services:
             KEYCLOAK_ADMIN_PASSWORD: ${KEYCLOAK_ADMIN_PASSWORD}
             KEYCLOAK_ENABLE_HEALTH_ENDPOINTS: 'true'
             KEYCLOAK_ENABLE_STATISTICS: 'true'
-            KC_HOSTNAME: localhost:28080
+            KC_HOSTNAME: host.docker.internal:28080
             KC_HOSTNAME_STRICT: 'false'
             KC_HOSTNAME_STRICT_HTTPS: 'false'
             KC_HTTP_ENABLED: 'true'
