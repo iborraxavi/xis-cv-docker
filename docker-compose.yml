@@ -6,6 +6,8 @@ networks:
 
 volumes:
     mongodb_data_container:
+    postgres_data:
+        driver: local
 
 services:
 
@@ -23,6 +25,66 @@ services:
             - 27017:27017
         volumes:
             - mongodb_data_container:/data
+        deploy:
+            restart_policy:
+                condition: on-failure
+                delay: 5s
+                max_attempts: 3
+                window: 120s
+
+    ############
+    # POSTGRES #
+    ############
+    postgres:
+        container_name: xis-keycloak-postgres
+        image: postgres:16.2
+        volumes:
+            - postgres_data:/var/lib/postgresql/data
+        environment:
+            POSTGRES_DB: ${POSTGRES_DB}
+            POSTGRES_USER: ${POSTGRES_USER}
+            POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+        networks:
+            - spring-cloud-network
+        deploy:
+            restart_policy:
+                condition: on-failure
+                delay: 5s
+                max_attempts: 3
+                window: 120s
+
+    ############
+    # KEYCLOAK #
+    ############
+    keycloak:
+        container_name: xis-keycloak
+        image: quay.io/keycloak/keycloak:23.0.6
+        command: start
+        environment:
+            KC_HOSTNAME: localhost
+            KC_HOSTNAME_PORT: 8080
+            KC_HOSTNAME_STRICT_BACKCHANNEL: false
+            KC_HTTP_ENABLED: true
+            KC_HOSTNAME_STRICT_HTTPS: false
+            KC_HEALTH_ENABLED: true
+            KEYCLOAK_ADMIN: ${KEYCLOAK_ADMIN}
+            KEYCLOAK_ADMIN_PASSWORD: ${KEYCLOAK_ADMIN_PASSWORD}
+            KC_DB: postgres
+            KC_DB_URL: jdbc:postgresql://postgres/${POSTGRES_DB}
+            KC_DB_USERNAME: ${POSTGRES_USER}
+            KC_DB_PASSWORD: ${POSTGRES_PASSWORD}
+        ports:
+            - 9090:8080
+        depends_on:
+            - postgres
+        networks:
+            - spring-cloud-network
+        deploy:
+            restart_policy:
+                condition: on-failure
+                delay: 5s
+                max_attempts: 3
+                window: 120s
 
     ####################################
     # SPRING BOOT CONFIGURATION SERVER #
