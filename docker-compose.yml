@@ -44,6 +44,8 @@ services:
             POSTGRES_DB: ${KEYCLOAK_DB_NAME}
             POSTGRES_USER: ${KEYCLOAK_DB_USER}
             POSTGRES_PASSWORD: ${KEYCLOAK_DB_PASSWORD}
+        ports:
+            - "5432:5432"
         networks:
             - spring-cloud-network
         deploy:
